@@ -47,7 +47,7 @@ view: events {
 
   measure: total_page_views {
     type: count
-    filters: [event_name:"page_view",event_name:"screen_view"]
+    filters: [event_name:"page_view,screen_view"]
   }
 
   dimension: video_id {
