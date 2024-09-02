@@ -20,6 +20,6 @@ explore: events {
 explore: article_metadata{
   join: events {
     relationship: one_to_one
-    sql_on: ${events.article_id} = ${article_metadata.mailonline_articles_metadata_article_id} ;;
+    sql_on: ${events.article_id} = ${article_metadata.article_id} ;;
   }
 }
