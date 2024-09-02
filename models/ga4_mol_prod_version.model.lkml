@@ -14,5 +14,5 @@ explore: events {
   always_filter: {
     filters: [events.event_date: "7 days"]
   }
-  sql_always_where: ${events.event_name} <> 'session_start';;
+  sql_always_where: ${events.event_name} <> 'session_start' and ${stream_id} = '8199972794';;
 }
