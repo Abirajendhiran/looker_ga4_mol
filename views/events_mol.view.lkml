@@ -371,7 +371,7 @@ view: events {
     hidden: yes
     sql: (SELECT TIMESTAMP_DIFF( TIMESTAMP_MICROS(LEAD(event_timestamp) OVER
           (PARTITION BY user_pseudo_id||${ga_session_id},
-          CASE WHEN event_name = 'page_view' THEN TRUE ELSE FALSE END ORDER BY event_timestamp ) ), TIMESTAMP_MICROS(event_timestamp), SECOND) ;;
+          CASE WHEN event_name = 'page_view' THEN TRUE ELSE FALSE END ORDER BY event_timestamp ) ), TIMESTAMP_MICROS(event_timestamp), SECOND)) ;;
   }
 
 
