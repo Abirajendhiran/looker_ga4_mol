@@ -352,16 +352,26 @@ view: events {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
   }
-  measure: count {
-    type: count
-    drill_fields: [detail*]
-  }
+
+  # Not Required
+  #measure: count {
+  #  type: count
+  #  drill_fields: [detail*]
+  #}
 
   # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-  event_name
-  ]
+  #set: detail {
+  #  fields: [
+  #event_name
+  #]
+  #}
+
+  dimension: seconds_between_page_views {
+    type: number
+    hidden: yes
+    sql: (SELECT TIMESTAMP_DIFF( TIMESTAMP_MICROS(LEAD(event_timestamp) OVER
+          (PARTITION BY user_pseudo_id||${ga_session_id},
+          CASE WHEN event_name = 'page_view' THEN TRUE ELSE FALSE END ORDER BY event_timestamp ) ), TIMESTAMP_MICROS(event_timestamp), SECOND) ;;
   }
 
 
@@ -390,6 +400,11 @@ view: events {
   measure: visits {
     type: count_distinct
     sql: ${unique_session_id} ;;
+  }
+
+  measure: time_spent {
+    type: sum
+    sql: ${seconds_between_page_views} ;;
   }
 
 }
