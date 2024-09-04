@@ -4,7 +4,6 @@ view: article_metadata {
     sql: SELECT
             article_id,
             adservable,
-            article_text,
             article_word_count,
             articles_source_id,
             author_name,
@@ -50,8 +49,8 @@ view: article_metadata {
   }
 
   measure: count {
-    type: count
-    drill_fields: [detail*]
+    type: count_distinct
+    sql: ${article_id} ;;
   }
 
   dimension: article_id {
@@ -288,7 +287,6 @@ view: article_metadata {
     fields: [
       article_id,
       adservable,
-      article_text,
       article_word_count,
       articles_source_id,
       author_name,
