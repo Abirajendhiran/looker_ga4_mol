@@ -40,16 +40,6 @@ view: events {
       );;
   }
 
-  measure: total_article_views {
-    type: sum
-    sql: ${article_view_flag} ;;
-  }
-
-  measure: total_page_views {
-    type: count
-    filters: [event_name:"page_view,screen_view"]
-  }
-
   dimension: video_id {
     type: string
     sql: (SELECT cast(coalesce(value.string_value,cast(value.int_value as string)) as STRING)
@@ -75,11 +65,6 @@ view: events {
       );;
   }
 
-  measure: total_video_views {
-    type: sum
-    sql: ${video_view_flag} ;;
-  }
-
   dimension: channel {
     type: string
     sql: (SELECT cast(coalesce(value.string_value,cast(value.int_value as string)) as STRING)
@@ -97,6 +82,13 @@ view: events {
   dimension: ga_session_id {
     type: number
     sql:  (SELECT coalesce(value.int_value,cast(value.string_value as INT64))
+          FROM UNNEST(${event_params})
+          WHERE key = 'ga_session_id');;
+  }
+
+  dimension: unique_session_id {
+    type: string
+    sql:  (SELECT user_pseudo_id||coalesce(value.int_value,cast(value.string_value as INT64))
           FROM UNNEST(${event_params})
           WHERE key = 'ga_session_id');;
   }
@@ -313,10 +305,6 @@ view: events {
              WHERE key = 'video_headline');;
   }
 
-#not modified
-
-
-
   dimension: event_name {
     type: string
     sql: ${TABLE}.event_name ;;
@@ -374,6 +362,34 @@ view: events {
     fields: [
   event_name
   ]
+  }
+
+
+# Custom Metrics
+
+  measure: total_video_views {
+    type: sum
+    sql: ${video_view_flag} ;;
+  }
+
+  measure: total_article_views {
+    type: sum
+    sql: ${article_view_flag} ;;
+  }
+
+  measure: total_page_views {
+    type: count
+    filters: [event_name:"page_view,screen_view"]
+  }
+
+  measure: users {
+    type: count_distinct
+    sql: ${user_pseudo_id} ;;
+  }
+
+  measure: visits {
+    type: count_distinct
+    sql: ${unique_session_id} ;;
   }
 
 }
